@@ -1,16 +1,18 @@
-Merchant Categorization with Clustering & NLP
+🌟 Merchant Categorization with Clustering & NLP
+
+An AI-powered system to categorize merchants from transactional data using NLP and clustering techniques!
 
 🚀 Overview
 
-This project categorizes merchants from transactional data using NLP and clustering techniques. It leverages:
+This project categorizes merchants using:
 
-FastText embeddings for textual representation
+📚 FastText embeddings for textual representation
 
-UMAP for dimensionality reduction
+🔄 UMAP for dimensionality reduction
 
-HDBSCAN and KMeans for clustering
+🛠️ HDBSCAN & KMeans for clustering
 
-WordCloud & Matplotlib for visualization
+🌈 WordCloud & Matplotlib for visualization
 
 📂 Project Structure
 
@@ -25,24 +27,23 @@ merchant-categorization/
 ├── requirements.txt        # Python dependencies
 ├── README.md               # Documentation
 ├── .gitignore              # Ignoring unnecessary files
-├── files/                  # Fasttext input, embedding models and vectors
 ├── data/                   # Raw and processed data (optional)
 ├── reports/                # Generated reports & visualizations (optional)
 └── notebooks/              # Jupyter Notebooks for analysis (optional)
 
 📌 Features
 
-Text Preprocessing: Removes noise and tokenizes merchant names.
+🌍 Text Preprocessing: Cleans merchant names, removes noise, and normalizes text.
 
-Dimensionality Reduction: Uses UMAP for better clustering.
+💡 Dimensionality Reduction: Uses UMAP to optimize clustering performance.
 
-Clustering Algorithms:
+🌱 Clustering Algorithms:
 
-HDBSCAN: Finds variable-sized clusters with noise handling.
+🌐 HDBSCAN: Density-based clustering with noise handling.
 
-KMeans: Alternative clustering method for comparison.
+🌍 KMeans: Classic clustering method for performance comparison.
 
-WordCloud Analysis: Generates cluster-specific word clouds.
+🎨 WordCloud Analysis: Visualizes common words in each merchant category.
 
 🔧 Installation
 
@@ -54,15 +55,15 @@ pip install -r requirements.txt
 
 📊 Running the Model
 
-To train and cluster data:
+1️⃣ Train & Cluster Data
 
 python src/model_training.py
 
-To filter merchant names:
+2️⃣ Filter Merchant Names
 
 python src/name_filtering.py
 
-To preprocess data and generate embeddings:
+3️⃣ Preprocess Data & Generate Embeddings
 
 python src/preprocessing.py
 
@@ -70,7 +71,7 @@ python src/preprocessing.py
 
 UMAP + HDBSCAN Clustering
 
-Best parameter settings found:
+💡 Best parameter settings found:
 
 n_neighbors = 30
 
@@ -80,13 +81,13 @@ min_cluster_size = 1500
 
 min_samples = 200
 
-Achieved 2 clusters, but merchant vs. human name differentiation remains a challenge.
+👤 Merchant vs. human name differentiation is a challenge.
 
-High noise (~0.45% of data) was observed.
+🔎 High noise (~0.45% of data) was observed.
 
 KMeans Clustering
 
-Will be tested next as an alternative to density-based clustering.
+💡 Currently being tested as an alternative to HDBSCAN.
 
 📊 Visualization
 
@@ -95,23 +96,26 @@ Sample word cloud for a merchant cluster:
 
 🏆 Key Takeaways
 
-Filtering out human names is crucial. Frequency-based and embedding-based methods were explored.
+🔍 Filtering out human names is crucial – frequency-based & embedding-based methods explored.
 
-HDBSCAN provided robust clustering, but fine-tuning is required to balance cluster size and noise.
+🚀 HDBSCAN provided robust clustering, but requires fine-tuning for best performance.
 
-Next steps: Testing KMeans and refining merchant filtering.
+🔄 Next steps: Test KMeans, refine merchant filtering, and optimize embeddings.
 
 📈 Future Work
 
-Improve merchant filtering by removing outliers using embeddings.
+🌟 Improve merchant filtering by removing outliers via embeddings.
 
-Optimize clustering hyperparameters for better silhouette score.
+💡 Optimize clustering hyperparameters for better silhouette scores.
 
-Explore unsupervised topic modeling for more granular categorization.
+🔬 Explore topic modeling for more granular merchant categorization.
 
 🤝 Contributing
 
-Feel free to fork, improve, and submit a PR.
+👉 Fork the repo
+
+👉 Implement improvements
+
+👉 Submit a pull request
 
 📧 Questions? Reach out at abhibak10@gmail.com
-
