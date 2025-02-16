@@ -47,6 +47,9 @@ Clone the repository and install dependencies:
 ```
 git clone <repo-url>
 cd merchant-categorization
+conda init
+conda create --name venv python=3.11
+conda activate venv
 pip install -r requirements.txt
 ```
 📊 Running the Model
@@ -69,10 +72,10 @@ UMAP + HDBSCAN Clustering
 
 💡 Best parameter settings found:
 ```
-n_neighbors = 30
-n_components = 5
-min_cluster_size = 1500
-min_samples = 200
+n_neighbors = 10
+n_components = 30
+min_cluster_size = 500
+min_samples = 50
 ```
 
 👤 Merchant vs. human name differentiation is a challenge.

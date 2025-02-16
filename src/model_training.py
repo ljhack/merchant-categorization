@@ -80,11 +80,16 @@ def run_hdbscan_model():
     # min_samples_list = [50, 100, 200]
 
     ## Temp fastest config for initial run
-    n_neighbors_list = [10, 15]
-    n_components_list = [10, 30]
-    min_cluster_size_list = [50, 100, 500]
-    min_samples_list = [50, 100, 200]
+    # n_neighbors_list = [10, 15]
+    # n_components_list = [10, 30]
+    # min_cluster_size_list = [50, 100, 500]
+    # min_samples_list = [50, 100, 200]
 
+    ## Best Parameters
+    n_neighbors_list = [10]
+    n_components_list = [30]
+    min_cluster_size_list = [500]
+    min_samples_list = [50]
 
     for n_neighbours, n_components, min_cluster_size, min_samples in product(n_neighbors_list, n_components_list, min_cluster_size_list, min_samples_list):
         print(f'Running HDBSCAN with n_neighbors={n_neighbours}, n_components={n_components}, min_cluster_size={min_cluster_size}, min_samples={min_samples}')
