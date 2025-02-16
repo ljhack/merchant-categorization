@@ -90,11 +90,16 @@ KMeans Clustering
 
     - Sample word cloud for a merchant cluster:
 
+🔨 Fixes
+
+    - Fix blank word-cloud issues
+    - Fix vizualizations that are not working
 
 🏆 Key Takeaways
 
     🔍 Filtering out human names is crucial – frequency-based & embedding-based methods explored.
     🚀 HDBSCAN provided robust clustering, but requires fine-tuning for best performance.
+    📊 Silhouette scores and cosine matrix gives good results
     🔄 Next steps: Test KMeans, refine merchant filtering, and optimize embeddings.
 
 📈 Future Work
@@ -102,6 +107,14 @@ KMeans Clustering
     🌟 Improve merchant filtering by removing outliers via embeddings.
     💡 Optimize clustering hyperparameters for better silhouette scores.
     🔬 Explore topic modeling for more granular merchant categorization.
+    🏷️ Name the cluster categories - check for heirarchies
+    📊 Add clustering confidence for each row, generate wordclouds using high confidence data
+    🔎 Analyse low confidence rows, may remove those rows from input data
+    🧹 Check if some clusters have specifically clustered non-merchant names, may remove that cluster from input data
+    🎯 Train final model on best input data
+    🚀 Convert final clustering model into API solution that categorizes un-clean merchant names
+    🔄 Compare with existing merchant categorization solution
+
 
 🤝 Contributing
 
