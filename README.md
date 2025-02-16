@@ -50,25 +50,25 @@ merchant-categorization/
 🔧 Installation
 
 Clone the repository and install dependencies:
-
+```
 git clone <repo-url>
 cd merchant-categorization
 pip install -r requirements.txt
-
+```
 📊 Running the Model
 
 1️⃣ Train & Cluster Data
-
+```
 python src/model_training.py
-
+```
 2️⃣ Filter Merchant Names
-
+```
 python src/name_filtering.py
-
+```
 3️⃣ Preprocess Data & Generate Embeddings
-
+```
 python src/preprocessing.py
-
+```
 🔬 Results
 
 UMAP + HDBSCAN Clustering
