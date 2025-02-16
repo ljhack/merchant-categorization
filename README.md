@@ -74,14 +74,12 @@ python src/preprocessing.py
 UMAP + HDBSCAN Clustering
 
 💡 Best parameter settings found:
-
+```
 n_neighbors = 30
-
 n_components = 5
-
 min_cluster_size = 1500
-
 min_samples = 200
+```
 
 👤 Merchant vs. human name differentiation is a challenge.
 
