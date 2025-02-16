@@ -16,6 +16,7 @@ This project categorizes merchants using:
 
 📂 Project Structure
 
+```
 merchant-categorization/
 ├── src/
 │   ├── categorization.py   # Clustering logic (HDBSCAN & KMeans)
@@ -30,6 +31,7 @@ merchant-categorization/
 ├── data/                   # Raw and processed data (optional)
 ├── reports/                # Generated reports & visualizations (optional)
 └── notebooks/              # Jupyter Notebooks for analysis (optional)
+```
 
 📌 Features
 
