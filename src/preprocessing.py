@@ -70,7 +70,7 @@ def preprocess_data(**kwargs):
 
     ## Create word count
     data['word_count'] = data[f'cleaned_{text_col}'].parallel_apply(lambda x: len(x.split()))
-    print(f"Word count dstribution:-\n{data['word_count'].describe(percentiles=[i/10 for i in range(11)]) * 100}")
+    print(f"Word count dstribution:-\n{data['word_count'].describe(percentiles=[i/10 for i in range(11)])}")
 
     ## Remove rows with word count less than 2
     data = data[data['word_count'] >= 2]
@@ -96,4 +96,4 @@ def preprocess_data(**kwargs):
     print('Embeddings scaled successfully!')
 
 
-    return embeddings
+    return cleaned_text, embeddings

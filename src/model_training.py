@@ -14,6 +14,7 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 
+import json
 from datetime import datetime
 import pandas as pd
 import numpy as np
@@ -38,11 +39,11 @@ def run_hdbscan_model():
 
 
     ## Read data
-    data = pd.read_csv(CFG.INPUT_DATA)
+    data = pd.read_csv(CFG.SAMPLE_INPUT_DATA)
     print(f'Number of rows in data: {len(data)}')
 
     ## Preprocess data
-    scaled_embeddings = prep.preprocess_data(data=data, text_col=CFG.TEXT_COL)
+    cleaned_text, scaled_embeddings = prep.preprocess_data(data=data, text_col=CFG.TEXT_COL)
     print(f'Shape of embeddings: {scaled_embeddings.shape}')
 
     ## Create an Excel Writer
@@ -57,7 +58,6 @@ def run_hdbscan_model():
         'n_neighbors': [],
         'min_cluster_size': [],
         'min_samples': [],
-        'metric': [],
         'n_clusters': [],
         'labels': [],
         'noise_ratio': [],
@@ -70,6 +70,7 @@ def run_hdbscan_model():
     ## Track best setting
     best_setting = None
     best_noise_ratio = 1.0  # Initialize with worst possible noise % (100%)
+    best_silhouette_score = -1  # Initialize with worst possible silhouette score (-1)
     best_cluster_distribution_confidence = 0   # Initialize with worst possible confidence (0%)
 
     ## Iterate over parameter combinations
@@ -79,10 +80,10 @@ def run_hdbscan_model():
     # min_samples_list = [50, 100, 200]
 
     ## Temp fastest config for initial run
-    n_neighbors_list = [15]
-    n_components_list = [10]
-    min_cluster_size_list = [100]
-    min_samples_list = [50]
+    n_neighbors_list = [10, 15]
+    n_components_list = [10, 30]
+    min_cluster_size_list = [50, 100, 500]
+    min_samples_list = [50, 100, 200]
 
 
     for n_neighbours, n_components, min_cluster_size, min_samples in product(n_neighbors_list, n_components_list, min_cluster_size_list, min_samples_list):
@@ -95,13 +96,13 @@ def run_hdbscan_model():
         umap_embeddings = cluster.run_umap(scaled_embeddings=scaled_embeddings, n_components=n_components, n_neighbors=n_neighbours, visualize=True)
 
         ## Run HDBSCAN
-        labels = cluster.run_hdbscan(embeddings=umap_embeddings, min_cluster_size=min_cluster_size, min_samples=min_samples, visualize=True)
+        labels = cluster.run_hdbscan(embeddings=umap_embeddings, min_cluster_size=min_cluster_size, min_samples=min_samples, visualize=True, cleaned_text=cleaned_text)
         time_taken = time.time() - start_time
         n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
 
         ## Use umap embeddings and labels to get purity and silhouette score
-        purity = cluster.get_purity(umap_embeddings, labels)
-        silhouette_score = cluster.get_silhouette_score(umap_embeddings, labels)
+        purity = cluster.get_purity(embeddings=umap_embeddings, labels=labels)
+        silh_score = cluster.get_silhouette_score(embeddings=umap_embeddings, labels=labels)
 
         ## Calculate noise ratio
         noise_ratio = np.sum(labels == -1) / len(labels)
@@ -118,14 +119,15 @@ def run_hdbscan_model():
         
         ## Print results
         print(f'Number of clusters: {n_clusters}')
-        print(f'Noise ratio: {noise_ratio}')
-        print(f'Cluster distribution confidence: {cluster_distribution_confidence}')
-        print(f'Purity: {purity}')
-        print(f'Silhouette score: {silhouette_score}')
-        print(f'Time taken: {time_taken} seconds')
+        print(f'Noise ratio: {noise_ratio * 100:.2f}')
+        print(f'Cluster distribution confidence: {cluster_distribution_confidence:0.2f}')
+        print(f'Purity: {purity:0.2f}')
+        print(f'Silhouette score: {silh_score:.2f}')
+        print(f'Time taken: {time_taken:.2f} seconds')
 
         ## Update best setting if necessary
-        if noise_ratio < best_noise_ratio or (noise_ratio == best_noise_ratio and cluster_distribution_confidence > best_cluster_distribution_confidence):
+        if n_clusters > 10 and silh_score > best_silhouette_score and cluster_distribution_confidence > best_cluster_distribution_confidence:
+            print(f'New best setting found: {noise_ratio * 100:.2f} noise ratio, {cluster_distribution_confidence:0.2f} cluster distribution confidence')
             best_setting = {
                 'reducer': 'UMAP',
                 'clusterer': 'HDBSCAN',
@@ -134,9 +136,8 @@ def run_hdbscan_model():
                 'min_cluster_size': min_cluster_size,
                 'min_samples': min_samples,
                 'n_clusters': n_clusters,
-                'labels': labels,
                 'purity': purity,
-                'silhouette_score': silhouette_score,
+                'silhouette_score': silh_score,
                 'noise_ratio': noise_ratio,
                 'cluster_distribution_confidence': cluster_distribution_confidence,
                 'time_taken': time_taken
@@ -154,14 +155,15 @@ def run_hdbscan_model():
         metadata['n_clusters'].append(n_clusters)
         metadata['labels'].append(labels)
         metadata['purity'].append(purity)
-        metadata['silhouette_score'].append(silhouette_score)
+        metadata['silhouette_score'].append(silh_score)
         metadata['noise_ratio'].append(noise_ratio)
+        metadata['cluster_distribution_confidence'].append(cluster_distribution_confidence)
         metadata['time_taken'].append(time_taken)
 
         ## Save clustering results for further analysis
         cluster_df = pd.DataFrame({
-            'merchant_name': data['pos'],
-            'labels': labels
+            'cleaned_pos': cleaned_text,
+            'labels': list(labels)
         })
         cluster_df.to_excel(writer, sheet_name=f'run_{run_id}', index=False)
 
@@ -173,20 +175,19 @@ def run_hdbscan_model():
 
     ## Save best setting
     if best_setting:
-        best_setting_df = pd.DataFrame(best_setting)
+        best_setting_df = pd.DataFrame(best_setting, index=['values'])
         best_setting_df.to_excel(f'{CFG.REPORTS_PATH}best_setting_{CURRENT_TIME}.xlsx', index=False)
         print(f'Best setting saved to {CFG.REPORTS_PATH}best_setting_{CURRENT_TIME}.xlsx')
-        print(f'Best setting: {best_setting}')
+        print(f'Best setting:\n{json.dumps(best_setting, indent=4, default=str)}')
 
-        df_best = pd.read_excel(f'{CFG.REPORTS_PATH}best_setting_{CURRENT_TIME}.xlsx')
+        best_run_id = f'{best_setting["n_neighbors"]}_{best_setting["n_components"]}_{best_setting["min_cluster_size"]}_{best_setting["min_samples"]}'
+        df_best = pd.read_excel(excel_filename, sheet_name=f'run_{best_run_id}')
 
-        for cluster_id in df_best['labels'][0]:
-            cluster_df = data[data['cluster'] == cluster_id]
-            cluster_df.to_excel(f'{CFG.REPORTS_PATH}cluster_{cluster_id}_{CURRENT_TIME}.xlsx', index=False)
-            print(f'Cluster {cluster_id} saved to {CFG.REPORTS_PATH}cluster_{cluster_id}_{CURRENT_TIME}.xlsx')
-
+        for cluster_id in df_best['labels'].value_counts().index.tolist()[:5]:
+            if cluster_id == -1:
+                continue
             ## Generate word cloud for cluster
-            cluster.plot_wordcloud(data, cluster_id)
+            cluster.plot_wordcloud(df_best, cluster_id)
 
     print('Done!')
 

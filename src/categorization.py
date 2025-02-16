@@ -37,6 +37,9 @@ def run_pca(**kwargs):
     random_state = kwargs.get('random_state', 42)
     visualize = kwargs.get('visualize', False)
 
+    print('Running PCA...')
+    print(f'Number of components: {n_components}')
+
     ## Run PCA
     pca = PCA(n_components=n_components, random_state=random_state)
     pca_embeddings = pca.fit_transform(scaled_embeddings)
@@ -103,11 +106,13 @@ def run_umap(**kwargs):
     # random_state = kwargs.get('random_state', 42)
     visualize = kwargs.get('visualize', False)
 
+    print(f'Running UMAP with n_components={n_components}, n_neighbors={n_neighbors}, min_dist={min_dist}, metric={metric}')
+
     ## Run UMAP
     umap_embeddings = umap.UMAP(
         n_components=n_components,
         n_neighbors=n_neighbors,
-        min_dist=min_dist,
+        # min_dist=min_dist,
         metric=metric,
         # random_state=random_state
     ).fit_transform(scaled_embeddings)
@@ -205,6 +210,7 @@ def run_hdbscan(**kwargs):
     min_samples = kwargs.get('min_samples', 5)
     # random_state = kwargs.get('random_state', 42)
     visualize = kwargs.get('visualize', False)
+    cleaned_text = kwargs.get('cleaned_text', None)
 
     ## Run HDBSCAN
     hdbscan = HDBSCAN(
@@ -226,21 +232,22 @@ def run_hdbscan(**kwargs):
 
         ## Visualize HDBSCAN clusters as word clouds
         for i in range(hdbscan.labels_.max() + 1):
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join([str(x) for x in embeddings[hdbscan.labels_ == i, :].mean(axis=0)]))
+            words = [cleaned_text[j] for j in range(len(hdbscan.labels_)) if hdbscan.labels_[j] == i]
+            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join(words))
             plt.figure(figsize=(10, 5))
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             plt.title(f'HDBSCAN cluster {i+1}')
             plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_cluster_{i+1}_{CURRENT_TIME}.png')
 
-        ## Visualize HDBSCAN clusters as bar plots
-        for i in range(hdbscan.labels_.max() + 1):
-            plt.figure(figsize=(10, 5))
-            plt.bar(range(len(embeddings[hdbscan.labels_ == i, :].mean(axis=0))), embeddings[hdbscan.labels_ == i, :].mean(axis=0))
-            plt.xlabel('Features')
-            plt.ylabel('Value')
-            plt.title(f'HDBSCAN cluster {i+1}')
-            plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_cluster_{i+1}_bar_{CURRENT_TIME}.png')
+        # ## Visualize HDBSCAN clusters as bar plots
+        # for i in range(hdbscan.labels_.max() + 1):
+        #     plt.figure(figsize=(10, 5))
+        #     plt.bar(range(len(embeddings[hdbscan.labels_ == i, :].mean(axis=0))), embeddings[hdbscan.labels_ == i, :].mean(axis=0))
+        #     plt.xlabel('Features')
+        #     plt.ylabel('Value')
+        #     plt.title(f'HDBSCAN cluster {i+1}')
+        #     plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_cluster_{i+1}_bar_{CURRENT_TIME}.png')
 
     return hdbscan.labels_
 
@@ -272,9 +279,9 @@ def get_silhouette_score(**kwargs):
     labels = kwargs.get('labels')
 
     ## Calculate silhouette score
-    silhouette_score = silhouette_score(embeddings, labels)
+    silh_score = silhouette_score(embeddings, labels)
 
-    return silhouette_score
+    return silh_score
 
 
 def plot_wordcloud(data, cluster_id):
@@ -283,7 +290,7 @@ def plot_wordcloud(data, cluster_id):
         '''
         print(f"Generating word cloud for Cluster {cluster_id}...")
 
-        text = " ".join(data[data["cluster"] == cluster_id]["cleaned_pos"].astype(str))
+        text = " ".join(data[data["labels"] == cluster_id]["cleaned_pos"].astype(str))
 
         if len(text) == 0:
             print(f"Skipping Cluster {cluster_id} (empty)")
