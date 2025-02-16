@@ -93,7 +93,9 @@ KMeans Clustering
     🔍 Filtering out human names is crucial – frequency-based & embedding-based methods explored.
     🚀 HDBSCAN provided robust clustering, but requires fine-tuning for best performance.
     🔄 Next steps: Test KMeans, refine merchant filtering, and optimize embeddings.
-    📈 Future Work
+
+📈 Future Work
+
     🌟 Improve merchant filtering by removing outliers via embeddings.
     💡 Optimize clustering hyperparameters for better silhouette scores.
     🔬 Explore topic modeling for more granular merchant categorization.
