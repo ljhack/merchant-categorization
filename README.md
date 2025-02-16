@@ -6,13 +6,10 @@ An AI-powered system to categorize merchants from transactional data using NLP a
 
 This project categorizes merchants using:
 
-📚 FastText embeddings for textual representation
-
-🔄 UMAP for dimensionality reduction
-
-🛠️ HDBSCAN & KMeans for clustering
-
-🌈 WordCloud & Matplotlib for visualization
+    📚 FastText embeddings for textual representation
+    🔄 UMAP for dimensionality reduction
+    🛠️ HDBSCAN & KMeans for clustering
+    🌈 WordCloud & Matplotlib for visualization
 
 📂 Project Structure
 
@@ -35,17 +32,14 @@ merchant-categorization/
 
 📌 Features
 
-🌍 Text Preprocessing: Cleans merchant names, removes noise, and normalizes text.
-
-💡 Dimensionality Reduction: Uses UMAP to optimize clustering performance.
+    🌍 Text Preprocessing: Cleans merchant names, removes noise, and normalizes text.
+    💡 Dimensionality Reduction: Uses UMAP to optimize clustering performance.
 
 🌱 Clustering Algorithms:
 
-🌐 HDBSCAN: Density-based clustering with noise handling.
-
-🌍 KMeans: Classic clustering method for performance comparison.
-
-🎨 WordCloud Analysis: Visualizes common words in each merchant category.
+    🌐 HDBSCAN: Density-based clustering with noise handling.
+    🌍 KMeans: Classic clustering method for performance comparison.
+    🎨 WordCloud Analysis: Visualizes common words in each merchant category.
 
 🔧 Installation
 
@@ -83,39 +77,31 @@ min_samples = 200
 
 👤 Merchant vs. human name differentiation is a challenge.
 
-🔎 High noise (~0.45% of data) was observed.
+    - 🔎 High noise (~0.45% of data) was observed.
 
 KMeans Clustering
 
-💡 Currently being tested as an alternative to HDBSCAN.
+    - 💡 Currently being tested as an alternative to HDBSCAN.
 
 📊 Visualization
 
-Sample word cloud for a merchant cluster:
+    - Sample word cloud for a merchant cluster:
 
 
 🏆 Key Takeaways
 
-🔍 Filtering out human names is crucial – frequency-based & embedding-based methods explored.
-
-🚀 HDBSCAN provided robust clustering, but requires fine-tuning for best performance.
-
-🔄 Next steps: Test KMeans, refine merchant filtering, and optimize embeddings.
-
-📈 Future Work
-
-🌟 Improve merchant filtering by removing outliers via embeddings.
-
-💡 Optimize clustering hyperparameters for better silhouette scores.
-
-🔬 Explore topic modeling for more granular merchant categorization.
+    🔍 Filtering out human names is crucial – frequency-based & embedding-based methods explored.
+    🚀 HDBSCAN provided robust clustering, but requires fine-tuning for best performance.
+    🔄 Next steps: Test KMeans, refine merchant filtering, and optimize embeddings.
+    📈 Future Work
+    🌟 Improve merchant filtering by removing outliers via embeddings.
+    💡 Optimize clustering hyperparameters for better silhouette scores.
+    🔬 Explore topic modeling for more granular merchant categorization.
 
 🤝 Contributing
 
-👉 Fork the repo
-
-👉 Implement improvements
-
-👉 Submit a pull request
+    👉 Fork the repo
+    👉 Implement improvements
+    👉 Submit a pull request
 
 📧 Questions? Reach out at abhibak10@gmail.com
