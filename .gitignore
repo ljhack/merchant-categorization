@@ -59,10 +59,7 @@ htmlcov/
 
 # Data and model files
 data/*
-# files/*
-*.txt
-*.bin
-*.vec
+files/*
 reports/*
 notebooks/*
 experiments/*
