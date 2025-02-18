@@ -165,12 +165,20 @@ data[['merchant_name', 'cluster']].head(10)
 
 ### Interpreting Clustering Results:
 
-| Merchant Name     | Cluster Label |
-|-------------------|---------------|
-| johns grocery     | 0             |
-| starbucks coffee  | 1             |
-| walmart store     | 2             |
-| unknown merchant  | -1            |
+| Merchant Name              | Cluster Label |
+|----------------------------|---------------|
+| sharma enterprises         | 0             |
+| sarath enterprises         | 0             |
+| sri raghavendra ent        | 0             |
+| reliance retail ltd        | 3             |
+| mart retail ltd	         | 3             |
+| bazaar retail pvt	         | 3             |
+| northern arc capital limi	 | 5             |
+| payu finance india pvt ltd | 5             |
+| shubha trading company     | 6             |
+| shiv trading company	     | 6             |
+| resilient innov            | -1            |
+| rrpal construct            | -1            | 
 
 A cluster label of `-1` indicates that the merchant was classified as noise or an outlier.
 
