@@ -10,7 +10,7 @@ from hdbscan import HDBSCAN
 ## Dimensionality reduction dependencies
 from sklearn.decomposition import PCA
 import umap.umap_ as umap
-from sklearn.metrics.pairwise import cosine_distances
+# from sklearn.metrics.pairwise import cosine_distances
 
 ## Visualization dependencies
 import matplotlib.pyplot as plt
@@ -18,7 +18,6 @@ import seaborn as sns
 from wordcloud import WordCloud
 
 ## Other helpers
-from itertools import product
 from collections import Counter
 import numpy as np
 from datetime import datetime
