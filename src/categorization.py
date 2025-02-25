@@ -50,6 +50,7 @@ def run_pca(**kwargs):
         plt.xlabel('Number of components')
         plt.ylabel('Cumulative explained variance')
         plt.title('Explained variance ratio')
+        plt.grid(True)
         plt.savefig(f'{CFG.REPORTS_PATH}pca_explained_variance_ratio_{CURRENT_TIME}.png')
 
         ## Visualize PCA components
@@ -61,22 +62,22 @@ def run_pca(**kwargs):
         plt.savefig(f'{CFG.REPORTS_PATH}pca_components_{CURRENT_TIME}.png')
 
         ## Visualize PCA components as word clouds
-        for i in range(n_components):
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join([str(x) for x in pca.components_[i]]))
-            plt.figure(figsize=(10, 5))
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis('off')
-            plt.title(f'PCA component {i+1}')
-            plt.savefig(f'{CFG.REPORTS_PATH}pca_component_{i+1}_{CURRENT_TIME}.png')
+        # for i in range(n_components):
+        #     wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join([str(x) for x in pca.components_[i]]))
+        #     plt.figure(figsize=(10, 5))
+        #     plt.imshow(wordcloud, interpolation='bilinear')
+        #     plt.axis('off')
+        #     plt.title(f'PCA component {i+1}')
+        #     plt.savefig(f'{CFG.REPORTS_PATH}pca_component_{i+1}_{CURRENT_TIME}.png')
                 
         ## Visualize PCA components as bar plots
-        for i in range(n_components):
-            plt.figure(figsize=(10, 5))
-            plt.bar(range(len(pca.components_[i])), pca.components_[i])
-            plt.xlabel('Features')
-            plt.ylabel('Value')
-            plt.title(f'PCA component {i+1}')
-            plt.savefig(f'{CFG.REPORTS_PATH}pca_component_{i+1}_bar_{CURRENT_TIME}.png')
+        # for i in range(n_components):
+        #     plt.figure(figsize=(10, 5))
+        #     plt.bar(range(len(pca.components_[i])), pca.components_[i])
+        #     plt.xlabel('Features')
+        #     plt.ylabel('Value')
+        #     plt.title(f'PCA component {i+1}')
+        #     plt.savefig(f'{CFG.REPORTS_PATH}pca_component_{i+1}_bar_{CURRENT_TIME}.png')
 
         ## Visualize in 3d
         fig = plt.figure(figsize=(10, 5))
@@ -87,6 +88,7 @@ def run_pca(**kwargs):
         ax.set_zlabel('PC3')
         plt.title('PCA 3D')
         plt.savefig(f'{CFG.REPORTS_PATH}pca_3d_{CURRENT_TIME}.png')
+        plt.show()
         plt.close()
 
     return pca_embeddings
@@ -99,18 +101,17 @@ def run_umap(**kwargs):
     '''
     scaled_embeddings = kwargs.get('scaled_embeddings')
     n_components = kwargs.get('n_components', 10)
-    n_neighbors = kwargs.get('n_neighbors', 15)
-    min_dist = kwargs.get('min_dist', 0.1)
+    # n_neighbors = kwargs.get('n_neighbors', 2)
+    min_dist = kwargs.get('min_dist', None)
     metric = kwargs.get('metric', 'cosine')
     # random_state = kwargs.get('random_state', 42)
     visualize = kwargs.get('visualize', False)
 
-    print(f'Running UMAP with n_components={n_components}, n_neighbors={n_neighbors}, min_dist={min_dist}, metric={metric}')
+    print(f'Running UMAP with n_components={n_components}, min_dist={min_dist}, metric={metric}')
 
     ## Run UMAP
     umap_embeddings = umap.UMAP(
         n_components=n_components,
-        n_neighbors=n_neighbors,
         # min_dist=min_dist,
         metric=metric,
         # random_state=random_state
@@ -207,6 +208,9 @@ def run_hdbscan(**kwargs):
     embeddings = kwargs.get('embeddings')
     min_cluster_size = kwargs.get('min_cluster_size', 5)
     min_samples = kwargs.get('min_samples', 5)
+    cluster_selection_method = kwargs.get('cluster_selection_method', 'eom')
+    cluster_selection_epsilon = kwargs.get('cluster_selection_epsilon', 0.5)
+    allow_single_cluster = kwargs.get('allow_single_cluster', True)
     # random_state = kwargs.get('random_state', 42)
     visualize = kwargs.get('visualize', False)
     cleaned_text = kwargs.get('cleaned_text', None)
@@ -216,7 +220,9 @@ def run_hdbscan(**kwargs):
         min_cluster_size=min_cluster_size,
         min_samples=min_samples,
         # random_state=random_state,
-        cluster_selection_method='eom'
+        cluster_selection_method=cluster_selection_method,
+        allow_single_cluster=allow_single_cluster,
+        cluster_selection_epsilon=cluster_selection_epsilon
     )
     hdbscan.fit(embeddings)
 
@@ -230,14 +236,14 @@ def run_hdbscan(**kwargs):
         plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_clusters_{CURRENT_TIME}.png')
 
         ## Visualize HDBSCAN clusters as word clouds
-        for i in range(hdbscan.labels_.max() + 1):
-            words = [cleaned_text[j] for j in range(len(hdbscan.labels_)) if hdbscan.labels_[j] == i]
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join(words))
-            plt.figure(figsize=(10, 5))
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis('off')
-            plt.title(f'HDBSCAN cluster {i+1}')
-            plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_cluster_{i+1}_{CURRENT_TIME}.png')
+        # for i in range(hdbscan.labels_.max() + 1):
+        #     words = [cleaned_text[j] for j in range(len(hdbscan.labels_)) if hdbscan.labels_[j] == i]
+        #     wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join(words))
+        #     plt.figure(figsize=(10, 5))
+        #     plt.imshow(wordcloud, interpolation='bilinear')
+        #     plt.axis('off')
+        #     plt.title(f'HDBSCAN cluster {i+1}')
+        #     plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_cluster_{i+1}_{CURRENT_TIME}.png')
 
         # ## Visualize HDBSCAN clusters as bar plots
         # for i in range(hdbscan.labels_.max() + 1):
@@ -248,7 +254,7 @@ def run_hdbscan(**kwargs):
         #     plt.title(f'HDBSCAN cluster {i+1}')
         #     plt.savefig(f'{CFG.REPORTS_PATH}hdbscan_cluster_{i+1}_bar_{CURRENT_TIME}.png')
 
-    return hdbscan.labels_
+    return hdbscan.labels_, hdbscan.probabilities_, hdbscan.outlier_scores_
 
 
 def get_purity(**kwargs):
